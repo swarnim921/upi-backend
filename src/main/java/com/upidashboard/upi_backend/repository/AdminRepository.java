@@ -1,0 +1,11 @@
+package com.upidashboard.upi_backend.repository;
+
+import com.upidashboard.upi_backend.model.Admin;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface AdminRepository extends MongoRepository<Admin, String> {
+    // You can add custom queries later, for example:
+    Admin findByEmail(String email);
+}
