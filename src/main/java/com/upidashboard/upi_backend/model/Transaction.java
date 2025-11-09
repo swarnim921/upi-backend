@@ -2,36 +2,39 @@ package com.upidashboard.upi_backend.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-<<<<<<< HEAD
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-=======
-import java.time.LocalDateTime;
-
->>>>>>> a9fde5b945b9b33778f4479bfb2c9c257e0e31fa
 @Document(collection = "transactions")
 public class Transaction {
+
     @Id
     private String id;
-<<<<<<< HEAD
-    private String sender;
-    private String receiver;
-    private Double amount;
-    private LocalDateTime date;
-}
-=======
     private String senderUpiId;
     private String receiverUpiId;
     private double amount;
-    private String status; // "SUCCESS", "FAILED", "PENDING"
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private String timestamp;
+
+    public Transaction() {}
+
+    public Transaction(String senderUpiId, String receiverUpiId, double amount, String timestamp) {
+        this.senderUpiId = senderUpiId;
+        this.receiverUpiId = receiverUpiId;
+        this.amount = amount;
+        this.timestamp = timestamp;
+    }
 
     // Getters and Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getSenderUpiId() { return senderUpiId; }
+    public void setSenderUpiId(String senderUpiId) { this.senderUpiId = senderUpiId; }
+
+    public String getReceiverUpiId() { return receiverUpiId; }
+    public void setReceiverUpiId(String receiverUpiId) { this.receiverUpiId = receiverUpiId; }
+
+    public double getAmount() { return amount; }
+    public void setAmount(double amount) { this.amount = amount; }
+
+    public String getTimestamp() { return timestamp; }
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
 }
->>>>>>> a9fde5b945b9b33778f4479bfb2c9c257e0e31fa

@@ -2,23 +2,6 @@ package com.upidashboard.upi_backend.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-<<<<<<< HEAD
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Document(collection = "users")
-public class User {
-    @Id
-    private String id;
-    private String name;
-    private String upiId;
-    private String email;
-}
-=======
 
 @Document(collection = "users")
 public class User {
@@ -30,6 +13,7 @@ public class User {
     private String upiId;
     private double balance;
 
+    // ✅ Constructors
     public User() {}
 
     public User(String name, String email, String upiId, double balance) {
@@ -39,7 +23,7 @@ public class User {
         this.balance = balance;
     }
 
-    // Getters and Setters
+    // ✅ Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -55,4 +39,3 @@ public class User {
     public double getBalance() { return balance; }
     public void setBalance(double balance) { this.balance = balance; }
 }
->>>>>>> a9fde5b945b9b33778f4479bfb2c9c257e0e31fa

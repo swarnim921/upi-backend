@@ -4,5 +4,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import com.upidashboard.upi_backend.model.Admin;
 
 public interface AdminRepository extends MongoRepository<Admin, String> {
-    // You can add custom query methods here later if needed
+    Admin findByEmail(String email); // ✅ this line fixes the missing method
 }
