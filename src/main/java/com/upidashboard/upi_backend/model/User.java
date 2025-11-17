@@ -1,58 +1,42 @@
 package com.upidashboard.upi_backend.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-<<<<<<< HEAD
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "users")
 public class User {
-    @Id
-    private String id;
-    private String name;
-    private String upiId;
-    private String email;
-}
-=======
-
-@Document(collection = "users")
-public class User {
 
     @Id
     private String id;
+
     private String name;
     private String email;
     private String upiId;
-    private double balance;
 
-    public User() {}
+    @JsonIgnore
+    private String password;
 
-    public User(String name, String email, String upiId, double balance) {
-        this.name = name;
-        this.email = email;
-        this.upiId = upiId;
-        this.balance = balance;
-    }
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
 
-    // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    @Builder.Default
+    private double balance = 0.0;
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getUpiId() { return upiId; }
-    public void setUpiId(String upiId) { this.upiId = upiId; }
-
-    public double getBalance() { return balance; }
-    public void setBalance(double balance) { this.balance = balance; }
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }
->>>>>>> a9fde5b945b9b33778f4479bfb2c9c257e0e31fa

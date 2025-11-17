@@ -1,37 +1,43 @@
 package com.upidashboard.upi_backend.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-<<<<<<< HEAD
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import java.time.LocalDateTime;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-=======
-import java.time.LocalDateTime;
-
->>>>>>> a9fde5b945b9b33778f4479bfb2c9c257e0e31fa
 @Document(collection = "transactions")
 public class Transaction {
     @Id
     private String id;
-<<<<<<< HEAD
-    private String sender;
-    private String receiver;
-    private Double amount;
-    private LocalDateTime date;
-}
-=======
+
+    private String intentId;
+    private String clientSecret;
+    private String userId;
     private String senderUpiId;
     private String receiverUpiId;
     private double amount;
-    private String status; // "SUCCESS", "FAILED", "PENDING"
-    private LocalDateTime timestamp = LocalDateTime.now();
+    private String currency;
+    private TransactionStatus status;
+    private String description;
+    private String utr;
+    private String failureCode;
+    private String failureMessage;
 
-    // Getters and Setters
+    @Builder.Default
+    private Map<String, Object> metadata = new HashMap<>();
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }
->>>>>>> a9fde5b945b9b33778f4479bfb2c9c257e0e31fa
