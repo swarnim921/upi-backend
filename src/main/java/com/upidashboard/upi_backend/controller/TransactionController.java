@@ -21,6 +21,9 @@ public class TransactionController {
 
     @GetMapping
     public List<Transaction> getTransactionsForCurrentUser(Authentication authentication) {
+        if (authentication == null) {
+            return transactionService.getAllTransactions();
+        }
         String email = authentication.getName();
         var user = userService.getEntityByEmail(email);
         return transactionService.getTransactionsForUser(user.getId());

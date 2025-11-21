@@ -30,7 +30,6 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public List<UserProfile> getAllUsers() {
         return userService.getAllUserProfiles();
     }
