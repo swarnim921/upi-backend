@@ -8,19 +8,17 @@ import lombok.Data;
 @Data
 public class RegisterRequest {
 
-    @NotBlank
+    @NotBlank(message = "Name cannot be empty")
     private String name;
 
-    @Email
-    @NotBlank
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email cannot be empty")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "UPI ID cannot be empty")
     private String upiId;
 
-    @NotBlank
+    @NotBlank(message = "Password cannot be empty")
     @Size(min = 6, message = "Password must be at least 6 characters long")
     private String password;
 }
-
-

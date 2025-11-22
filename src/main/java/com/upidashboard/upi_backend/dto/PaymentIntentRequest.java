@@ -12,17 +12,16 @@ public class PaymentIntentRequest {
     @Min(value = 1, message = "Amount must be greater than zero")
     private double amount;
 
-    @NotBlank
+    @NotBlank(message = "Currency cannot be empty")
     private String currency = "INR";
 
-    @NotBlank
+    @NotBlank(message = "Sender UPI ID is required")
     private String senderUpiId;
 
-    @NotBlank
+    @NotBlank(message = "Receiver UPI ID is required")
     private String receiverUpiId;
 
     private String description;
 
     private Map<String, Object> metadata = new HashMap<>();
 }
-

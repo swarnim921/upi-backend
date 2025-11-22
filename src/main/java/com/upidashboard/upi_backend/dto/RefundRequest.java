@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class RefundRequest {
 
-    @NotBlank
+    @NotBlank(message = "Payment intent ID is required")
     private String intentId;
 
     @Min(value = 0, message = "Refund amount cannot be negative")
@@ -15,4 +15,3 @@ public class RefundRequest {
 
     private String reason;
 }
-

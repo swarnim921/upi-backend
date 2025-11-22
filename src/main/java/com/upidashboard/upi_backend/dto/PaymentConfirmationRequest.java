@@ -6,13 +6,11 @@ import lombok.Data;
 @Data
 public class PaymentConfirmationRequest {
 
-    @NotBlank
+    @NotBlank(message = "Payment intent ID is required")
     private String intentId;
 
-    @NotBlank
+    @NotBlank(message = "OTP is required")
     private String otp;
 
     private String deviceFingerprint;
 }
-
-
