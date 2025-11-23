@@ -1,5 +1,5 @@
 # 📘 User Manual
-> **Version:** 1.1 | **Last Updated:** 2025-11-23
+> **Version:** 1.2 | **Last Updated:** 2025-11-23
 
 ## 1. What is the UPI Dashboard System?
 The UPI Dashboard System is a simple and secure way to manage your money online. It acts like a digital wallet where you can:

@@ -1,5 +1,5 @@
 # 🔌 Frontend-Backend Integration Guide
-> **Version:** 1.1 | **Last Updated:** 2025-11-23
+> **Version:** 1.2 | **Last Updated:** 2025-11-23
 
 ## 1. Login & JWT Storage
 
