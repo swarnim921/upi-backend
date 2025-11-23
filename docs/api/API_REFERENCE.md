@@ -114,20 +114,6 @@ Authorization: Bearer <JWT_TOKEN>
   "balance": 1000.00,
   "currency": "INR"
 }
-```
-
----
-
-## 💸 Payments
-
-### 1. Create Payment Intent
-**Endpoint:** `POST /payment/intent`
-**Access:** USER
-
-**Request Body:**
-```json
-{
-  "amount": 500.00, // Required, Min 1
   "payeeUpiId": "merchant@upi", // Required
   "description": "Grocery shopping" // Optional
 }
