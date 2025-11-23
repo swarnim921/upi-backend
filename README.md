@@ -59,8 +59,30 @@ Once the application is running, you can access the interactive API docs:
 ## 🔐 Authentication Flow
 1.  **Register**: POST `/api/auth/register` to create an account.
 2.  **Login**: POST `/api/auth/login` to get a **JWT Token**.
-3.  **Access**: Include the token in the header for all subsequent requests:
+3.  **Google Login**: GET `/api/auth/google` to get redirect URL.
+4.  **Access**: Include the token in the header for all subsequent requests:
     `Authorization: Bearer <your_token>`
+
+## ☁️ Google Cloud Setup (For SSO)
+To enable "Login with Google", you need to set up a project in Google Cloud Console.
+
+1.  Go to [Google Cloud Console](https://console.cloud.google.com/).
+2.  Create a new project.
+3.  Go to **APIs & Services > Credentials**.
+4.  Create **OAuth Client ID**.
+    *   **Application Type**: Web Application
+    *   **Authorized Redirect URIs**: `http://localhost:8080/login/oauth2/code/google`
+5.  Copy the **Client ID** and **Client Secret**.
+
+## ⚙️ Environment Variables
+Create a `.env` file (or set system variables) with the following:
+
+```properties
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET=your_super_secret_key_change_me
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
 
 ## 📁 Folder Structure
 ```

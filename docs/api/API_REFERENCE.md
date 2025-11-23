@@ -67,7 +67,26 @@ Authorization: Bearer <JWT_TOKEN>
 }
 ```
 
-### 3. Get My Profile
+### 3. Google Login
+**Endpoint:** `GET /api/auth/google`
+**Access:** Public
+
+**Response (200 OK):**
+```json
+{
+  "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth?...",
+  "message": "Redirect to /oauth2/authorization/google to initiate Google OAuth2 login"
+}
+```
+
+**Flow:**
+1. Frontend calls `/api/auth/google` to get the redirect URL.
+2. Frontend redirects user to that URL.
+3. User logs in with Google.
+4. Google redirects back to backend (handled automatically).
+5. Backend processes login and redirects to Frontend with JWT (usually via query param or cookie).
+
+### 4. Get My Profile
 **Endpoint:** `GET /users/me`
 **Access:** USER
 

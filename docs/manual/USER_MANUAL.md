@@ -24,9 +24,16 @@ If you are new, you need to create an account.
 ## 3. How to Login
 Once you have an account, you can log in.
 
+### Option A: Email & Password
 1.  Enter your **Email**.
 2.  Enter your **Password**.
 3.  Click **"Login"**.
+
+### Option B: Login with Google
+1.  Click the **"Sign in with Google"** button.
+2.  Select your Google account.
+3.  You will be logged in automatically!
+
 4.  You will see your Dashboard with your current balance.
 
 ---

@@ -33,18 +33,6 @@ async function login(email, password) {
   try {
     const response = await axios.post('http://localhost:8080/api/auth/login', {
       email, password
-    });
-    localStorage.setItem('jwt_token', response.data.token);
-  } catch (error) {
-    console.error('Login failed:', error.response.data.error);
-  }
-}
-```
-
----
-
-## 2. Authenticated Requests
-
 To access protected endpoints (like Profile, Payment), you **MUST** include the JWT token in the `Authorization` header.
 
 **Header Format:**
