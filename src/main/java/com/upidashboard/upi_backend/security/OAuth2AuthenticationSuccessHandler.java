@@ -20,6 +20,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final GoogleOAuth2Service googleOAuth2Service;
 
+    @org.springframework.beans.factory.annotation.Value("${app.frontend.url}")
+    private String frontendUrl;
+
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request,
@@ -33,7 +36,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
             // Redirect to Frontend with Token
             // AuthResponse contains UserProfile in 'user' field
-            String targetUrl = "http://localhost:5173/oauth/callback" +
+            String targetUrl = frontendUrl + "/oauth/callback" +
                     "?token=" + authResponse.getToken() +
                     "&id=" + authResponse.getUser().getId() +
                     "&username=" + (authResponse.getUser().getName() != null ? authResponse.getUser().getName() : "") +
@@ -47,7 +50,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             log.error("Error processing OAuth2 user", e);
             // Redirect to login with error
             getRedirectStrategy().sendRedirect(request, response,
-                    "http://localhost:5173/auth?error=authentication_failed");
+                    frontendUrl + "/auth?error=authentication_failed");
         }
     }
 }
