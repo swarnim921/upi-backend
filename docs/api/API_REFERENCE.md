@@ -1,23 +1,33 @@
-# API Reference
+# 📚 API Reference
 
-## 🔐 Authentication
-All protected endpoints require a valid JWT token in the `Authorization` header.
+## 🌐 Base URL
+**Base URL:** `http://localhost:8080/api`
+
+## 🔗 Swagger Documentation
+*   **Swagger UI:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+*   **OpenAPI JSON:** [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+## 🛠️ Headers
+All authenticated endpoints require the following headers:
 ```http
-Authorization: Bearer <your_token_here>
+Content-Type: application/json
+Authorization: Bearer <JWT_TOKEN>
 ```
 
-## 👥 User Management
+---
+
+## 👥 Authentication & User Management
 
 ### 1. Register User
-**Endpoint:** `POST /api/auth/register`
+**Endpoint:** `POST /auth/register`
 **Access:** Public
 
-**Request:**
+**Request Body:**
 ```json
 {
-  "username": "John Doe",
-  "email": "john@example.com",
-  "password": "password123"
+  "username": "John Doe",  // Required, Not Empty
+  "email": "john@example.com", // Required, Valid Email
+  "password": "password123" // Required, Min 6 chars
 }
 ```
 
@@ -34,14 +44,14 @@ Authorization: Bearer <your_token_here>
 ```
 
 ### 2. Login
-**Endpoint:** `POST /api/auth/login`
+**Endpoint:** `POST /auth/login`
 **Access:** Public
 
-**Request:**
+**Request Body:**
 ```json
 {
-  "email": "john@example.com",
-  "password": "password123"
+  "email": "john@example.com", // Required
+  "password": "password123" // Required
 }
 ```
 
@@ -58,8 +68,8 @@ Authorization: Bearer <your_token_here>
 ```
 
 ### 3. Get My Profile
-**Endpoint:** `GET /api/users/me`
-**Access:** User
+**Endpoint:** `GET /users/me`
+**Access:** USER
 
 **Response (200 OK):**
 ```json
@@ -72,19 +82,20 @@ Authorization: Bearer <your_token_here>
 }
 ```
 
+---
+
 ## 💸 Payments
 
 ### 1. Create Payment Intent
-Initiates a payment request.
-**Endpoint:** `POST /api/payment/intent`
-**Access:** User
+**Endpoint:** `POST /payment/intent`
+**Access:** USER
 
-**Request:**
+**Request Body:**
 ```json
 {
-  "amount": 500.00,
-  "payeeUpiId": "merchant@upi",
-  "description": "Grocery shopping"
+  "amount": 500.00, // Required, Min 1
+  "payeeUpiId": "merchant@upi", // Required
+  "description": "Grocery shopping" // Optional
 }
 ```
 
@@ -98,15 +109,14 @@ Initiates a payment request.
 ```
 
 ### 2. Confirm Payment
-Completes the transaction using OTP.
-**Endpoint:** `POST /api/payment/confirm`
-**Access:** User
+**Endpoint:** `POST /payment/confirm`
+**Access:** USER
 
-**Request:**
+**Request Body:**
 ```json
 {
-  "transactionId": "txn_98765",
-  "otp": "123456"
+  "transactionId": "txn_98765", // Required
+  "otp": "123456" // Required
 }
 ```
 
@@ -120,14 +130,14 @@ Completes the transaction using OTP.
 ```
 
 ### 3. Refund Transaction
-**Endpoint:** `POST /api/payment/refund`
-**Access:** User
+**Endpoint:** `POST /payment/refund`
+**Access:** USER
 
-**Request:**
+**Request Body:**
 ```json
 {
-  "transactionId": "txn_98765",
-  "reason": "Wrong amount"
+  "transactionId": "txn_98765", // Required
+  "reason": "Wrong amount" // Required
 }
 ```
 
@@ -141,11 +151,13 @@ Completes the transaction using OTP.
 }
 ```
 
+---
+
 ## 👑 Admin
 
 ### 1. List All Transactions
-**Endpoint:** `GET /api/admin/transactions`
-**Access:** Admin Only
+**Endpoint:** `GET /admin/transactions`
+**Access:** ADMIN
 
 **Response (200 OK):**
 ```json
@@ -161,12 +173,23 @@ Completes the transaction using OTP.
 ]
 ```
 
-## ⚠️ Error Codes
+---
 
-| Status | Error | Description |
-| :--- | :--- | :--- |
-| `400` | `Bad Request` | Invalid input (e.g., missing fields, invalid email). |
-| `401` | `Unauthorized` | Missing or invalid JWT token. |
-| `403` | `Forbidden` | User does not have permission (e.g., non-admin accessing admin API). |
-| `404` | `Not Found` | Resource (User, Transaction) not found. |
-| `500` | `Internal Server Error` | Unexpected server failure. |
+## ⚠️ Error Responses
+
+### Validation Error
+**Status:** `400 Bad Request`
+```json
+{
+  "email": "Invalid email format",
+  "password": "Password must be at least 6 characters long"
+}
+```
+
+### Generic Error
+**Status:** `400/401/403/404/500`
+```json
+{
+  "error": "User not found"
+}
+```
