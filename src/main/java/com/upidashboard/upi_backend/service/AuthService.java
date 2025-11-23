@@ -36,16 +36,13 @@ public class AuthService {
         }
 
         User user = User.builder()
-            .name(request.getName())
-            .email(request.getEmail())
-            .upiId(request.getUpiId())
-            .password(passwordEncoder.encode(request.getPassword()))
-<<<<<<< HEAD
-            .provider("local")
-=======
->>>>>>> 55193cc7ccab3d3de210393cc79c283653832c87
-            .roles(Set.of(Role.USER))
-            .build();
+                .name(request.getName())
+                .email(request.getEmail())
+                .upiId(request.getUpiId())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .provider("local")
+                .roles(Set.of(Role.USER))
+                .build();
 
         User saved = userRepository.save(user);
         return buildAuthResponse(saved);
@@ -53,11 +50,10 @@ public class AuthService {
 
     public AuthResponse authenticate(AuthRequest request) {
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
         return buildAuthResponse(user);
     }
@@ -66,28 +62,26 @@ public class AuthService {
         var userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String token = jwtService.generateToken(userDetails);
         long expiresAt = Instant.now()
-            .plus(jwtService.getExpirationMinutes(), ChronoUnit.MINUTES)
-            .toEpochMilli();
+                .plus(jwtService.getExpirationMinutes(), ChronoUnit.MINUTES)
+                .toEpochMilli();
 
         return AuthResponse.builder()
-            .token(token)
-            .expiresAt(expiresAt)
-            .user(toProfile(user))
-            .build();
+                .token(token)
+                .expiresAt(expiresAt)
+                .user(toProfile(user))
+                .build();
     }
 
     public UserProfile toProfile(User user) {
         return UserProfile.builder()
-            .id(user.getId())
-            .name(user.getName())
-            .email(user.getEmail())
-            .upiId(user.getUpiId())
-            .balance(user.getBalance())
-            .roles(user.getRoles())
-            .createdAt(user.getCreatedAt())
-            .updatedAt(user.getUpdatedAt())
-            .build();
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .upiId(user.getUpiId())
+                .balance(user.getBalance())
+                .roles(user.getRoles())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
     }
 }
-
-
