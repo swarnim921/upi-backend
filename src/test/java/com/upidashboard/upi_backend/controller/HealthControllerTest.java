@@ -11,6 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@org.springframework.test.context.TestPropertySource(properties = {
+        "spring.security.oauth2.client.registration.google.client-id=test-client-id",
+        "spring.security.oauth2.client.registration.google.client-secret=test-client-secret"
+})
 class HealthControllerTest {
 
     @Autowired
