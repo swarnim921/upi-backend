@@ -52,6 +52,16 @@ We have detailed documentation available in the `docs/` folder:
 4.  **Access the API**:
     The server will start at `http://localhost:8080`.
 
+## 🧪 Running Tests
+To run the automated test suite (Unit & Integration tests):
+```bash
+mvn test
+```
+This will verify:
+*   Authentication logic (Login, Register)
+*   Security configuration (JWT, OAuth2)
+*   Service layer logic
+
 ## 🔗 Swagger API Documentation
 Once the application is running, you can access the interactive API docs:
 *   **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
