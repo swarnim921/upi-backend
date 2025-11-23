@@ -28,9 +28,12 @@ public class User {
     @JsonIgnore
     private String password;
 
+<<<<<<< HEAD
     private String provider; // e.g., "google", "local"
     private String providerId; // OAuth2 provider's user ID
 
+=======
+>>>>>>> 55193cc7ccab3d3de210393cc79c283653832c87
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 

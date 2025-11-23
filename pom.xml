@@ -42,12 +42,15 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+<<<<<<< HEAD
         <!-- OAuth2 Client for Google SSO -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
 
+=======
+>>>>>>> 55193cc7ccab3d3de210393cc79c283653832c87
         <!-- JSON Web Tokens -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

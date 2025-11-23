@@ -40,7 +40,10 @@ public class AuthService {
             .email(request.getEmail())
             .upiId(request.getUpiId())
             .password(passwordEncoder.encode(request.getPassword()))
+<<<<<<< HEAD
             .provider("local")
+=======
+>>>>>>> 55193cc7ccab3d3de210393cc79c283653832c87
             .roles(Set.of(Role.USER))
             .build();
 
