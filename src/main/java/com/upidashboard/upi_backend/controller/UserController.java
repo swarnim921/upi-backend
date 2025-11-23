@@ -24,6 +24,11 @@ public class UserController {
         return userService.getProfileByEmail(authentication.getName());
     }
 
+    @GetMapping("/wallet")
+    public com.upidashboard.upi_backend.dto.WalletDto getWallet(Authentication authentication) {
+        return userService.getWallet(authentication.getName());
+    }
+
     @GetMapping("/{upiId}")
     public UserProfile getUserByUpiId(@PathVariable String upiId) {
         return userService.getUserByUpiId(upiId);

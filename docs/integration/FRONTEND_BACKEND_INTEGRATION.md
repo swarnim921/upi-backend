@@ -26,21 +26,6 @@ async function login(email, password) {
     console.error('Login failed:', data.error);
   }
 }
-```
-
-**Example (Axios):**
-```javascript
-async function login(email, password) {
-  try {
-    const response = await axios.post('http://localhost:8080/api/auth/login', {
-      email, password
-To access protected endpoints (like Profile, Payment), you **MUST** include the JWT token in the `Authorization` header.
-
-**Header Format:**
-```javascript
-headers: {
-  'Authorization': `Bearer ${localStorage.getItem('jwt_token')}`,
-  'Content-Type': 'application/json'
 }
 ```
 

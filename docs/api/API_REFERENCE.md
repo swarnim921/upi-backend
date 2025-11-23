@@ -85,7 +85,8 @@ Authorization: Bearer <JWT_TOKEN>
 2. Frontend redirects user to that URL.
 3. User logs in with Google.
 4. Google redirects back to backend (handled automatically).
-5. Backend processes login and redirects to Frontend with JWT (usually via query param or cookie).
+5. Backend redirects to Frontend Callback URL (`http://localhost:5173/oauth/callback`) with query params:
+   `?token=...&id=...&username=...&email=...&roles=...`
 
 ### 4. Get My Profile
 **Endpoint:** `GET /users/me`
@@ -99,6 +100,19 @@ Authorization: Bearer <JWT_TOKEN>
   "email": "john@example.com",
   "upiId": "john@upi",
   "balance": 1000.00
+}
+```
+
+### 5. Get My Wallet
+**Endpoint:** `GET /users/wallet`
+**Access:** USER
+
+**Response (200 OK):**
+```json
+{
+  "walletId": "w_653a1b2c...",
+  "balance": 1000.00,
+  "currency": "INR"
 }
 ```
 

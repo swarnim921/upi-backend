@@ -19,21 +19,31 @@ public class UserService {
 
     public List<UserProfile> getAllUserProfiles() {
         return userRepository.findAll()
-            .stream()
-            .map(this::toProfile)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toProfile)
+                .collect(Collectors.toList());
     }
 
     public UserProfile getProfileByEmail(String email) {
         return userRepository.findByEmail(email)
-            .map(this::toProfile)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .map(this::toProfile)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     public UserProfile getUserByUpiId(String upiId) {
         return userRepository.findByUpiId(upiId)
-            .map(this::toProfile)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with UPI: " + upiId));
+                .map(this::toProfile)
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with UPI: " + upiId));
+    }
+
+    public com.upidashboard.upi_backend.dto.WalletDto getWallet(String email) {
+        User user = getEntityByEmail(email);
+        return com.upidashboard.upi_backend.dto.WalletDto.builder()
+                .walletId("w_" + user.getId())
+                .balance(user.getBalance())
+                .currency("INR")
+                .build();
     }
 
     public void deleteUser(String id) {
@@ -50,19 +60,19 @@ public class UserService {
 
     public User getEntityByEmail(String email) {
         return userRepository.findByEmail(email)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     private UserProfile toProfile(User user) {
         return UserProfile.builder()
-            .id(user.getId())
-            .name(user.getName())
-            .email(user.getEmail())
-            .upiId(user.getUpiId())
-            .balance(user.getBalance())
-            .roles(user.getRoles())
-            .createdAt(user.getCreatedAt())
-            .updatedAt(user.getUpdatedAt())
-            .build();
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .upiId(user.getUpiId())
+                .balance(user.getBalance())
+                .roles(user.getRoles())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
     }
 }

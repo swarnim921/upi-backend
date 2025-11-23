@@ -1,6 +1,5 @@
 package com.upidashboard.upi_backend.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.upidashboard.upi_backend.dto.AuthResponse;
 import com.upidashboard.upi_backend.service.GoogleOAuth2Service;
 import jakarta.servlet.ServletException;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Component;
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final GoogleOAuth2Service googleOAuth2Service;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationSuccess(
@@ -29,24 +27,27 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             Authentication authentication) throws IOException, ServletException {
 
         OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
-        
+
         try {
             AuthResponse authResponse = googleOAuth2Service.processOAuth2User(oauth2User);
-            
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
-            
-            objectMapper.writeValue(response.getWriter(), authResponse);
-            
-            String email = oauth2User.getAttribute("email");
-            log.info("OAuth2 authentication successful for user: {}", email);
+
+            // Redirect to Frontend with Token
+            // AuthResponse contains UserProfile in 'user' field
+            String targetUrl = "http://localhost:5173/oauth/callback" +
+                    "?token=" + authResponse.getToken() +
+                    "&id=" + authResponse.getUser().getId() +
+                    "&username=" + (authResponse.getUser().getName() != null ? authResponse.getUser().getName() : "") +
+                    "&email=" + authResponse.getUser().getEmail() +
+                    "&roles=" + authResponse.getUser().getRoles().stream().map(Enum::name).reduce((a, b) -> a + "," + b)
+                            .orElse("");
+
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
         } catch (Exception e) {
             log.error("Error processing OAuth2 user", e);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.setContentType("application/json");
-            response.getWriter().write("{\"error\":\"Authentication failed\"}");
+            // Redirect to login with error
+            getRedirectStrategy().sendRedirect(request, response,
+                    "http://localhost:5173/auth?error=authentication_failed");
         }
     }
 }
-
