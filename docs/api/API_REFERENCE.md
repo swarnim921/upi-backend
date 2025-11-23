@@ -1,4 +1,5 @@
 # 📚 API Reference
+> **Version:** 1.1 | **Last Updated:** 2025-11-23
 
 ## 🌐 Base URL
 **Base URL:** `http://localhost:8080/api`

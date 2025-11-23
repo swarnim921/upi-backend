@@ -1,4 +1,5 @@
 # UPI Dashboard Backend
+> **Version:** 1.1 | **Last Updated:** 2025-11-23
 
 ## 📌 Project Overview
 The **UPI Dashboard Backend** is a secure and scalable Spring Boot application that powers a digital payment system. It handles user authentication, real-time money transfers, wallet management, and transaction history.
