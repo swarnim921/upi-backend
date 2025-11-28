@@ -41,7 +41,7 @@ class AuthControllerTest {
         private com.upidashboard.upi_backend.security.CustomUserDetailsService customUserDetailsService;
 
         @MockBean
-        private com.upidashboard.upi_backend.config.OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+        private com.upidashboard.upi_backend.security.OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
         @MockBean
         private com.upidashboard.upi_backend.service.GoogleOAuth2Service googleOAuth2Service;
