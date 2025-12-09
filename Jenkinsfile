@@ -66,8 +66,12 @@ pipeline {
                         # 2. Kill existing process
                         ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "pkill -f 'java -jar' || true"
                         
-                        # 3. Copy JAR file
-                        scp $SSH_OPTS -i $SSH_KEY target/${JAR_NAME} $SSH_USER@${APP_SERVER_IP}:/home/ec2-user/app.jar
+                        # Debug: Verify JAR exists
+                        ls -la target/
+                        
+                        # 3. Copy JAR file (Verbose)
+                        echo "Copying JAR to server..."
+                        scp -v $SSH_OPTS -i $SSH_KEY target/${JAR_NAME} $SSH_USER@${APP_SERVER_IP}:/home/ec2-user/app.jar
                         
                         # 4. Start Application with Env Vars
                         ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "
