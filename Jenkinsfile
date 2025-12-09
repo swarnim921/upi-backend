@@ -72,9 +72,13 @@ pipeline {
                         ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "pkill -f java || true" || true
                         sleep 2
                         
-                        # 3. Copy JAR file (Verbose)
-                        echo "Copying JAR to server..."
-                        scp -v $SSH_OPTS -i $SSH_KEY target/${JAR_NAME} $SSH_USER@${APP_SERVER_IP}:/home/ec2-user/app.jar
+                        # 3. Copy JAR file (Verbose + Legacy Protocol)
+                        echo "Checking remote permissions..."
+                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "ls -ld /home/ec2-user"
+                        
+                        echo "Copying JAR to server (using legacy SCP)..."
+                        # Use -O for legacy SCP protocol (avoids SFTP issues)
+                        scp -v -O $SSH_OPTS -i $SSH_KEY target/${JAR_NAME} $SSH_USER@${APP_SERVER_IP}:/home/ec2-user/app.jar
                         
                         # 4. Start Application with Env Vars
                         ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "
