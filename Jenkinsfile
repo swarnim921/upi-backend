@@ -109,7 +109,7 @@ pipeline {
         failure {
             echo '❌ Pipeline failed!'
         }
-        always {
+        cleanup {
             cleanWs()
         }
     }
