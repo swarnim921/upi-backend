@@ -14,7 +14,7 @@
 2. Configure:
    - **Name**: `jenkins-server`
    - **AMI**: Amazon Linux 2023 or Ubuntu 22.04
-   - **Instance Type**: `t2.micro` (Free Tier)
+   - **Instance Type**: `t3.small` (Required for Jenkins stability, t3.micro is insufficient)
    - **Key Pair**: Select or create new (.pem file)
    - **Security Group**: Create new with rules below
 
