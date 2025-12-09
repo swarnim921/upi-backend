@@ -60,14 +60,17 @@ pipeline {
                         # We need to STRICTLY disable host key checking for automation
                         SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=30"
                         
-                        # 1. Install Java if missing
-                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "java -version || sudo dnf install -y java-17-amazon-corretto"
-                        
-                        # 2. Kill existing process
-                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "pkill -f 'java -jar' || true"
-                        
-                        # Debug: Verify JAR exists
+                        # Debug: Verify JAR exists locally first
                         ls -la target/
+
+                        # 1. Install Java (Simple check)
+                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "java -version || sudo dnf install -y java-17-amazon-corretto"
+                        sleep 2
+                        
+                        # 2. Kill existing process (Simplified)
+                        # We ignore exit code 255 or 1 just in case
+                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "pkill -f java || true" || true
+                        sleep 2
                         
                         # 3. Copy JAR file (Verbose)
                         echo "Copying JAR to server..."
