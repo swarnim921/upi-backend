@@ -53,23 +53,24 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 echo '🚀 Deploying to Application Server...'
-                sshagent(['upi-ec2-key']) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'upi-ec2-key', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     sh '''
                         echo "Deploying to ${APP_SERVER_IP}..."
-                        # SSH Options to avoid host key checking
-                        SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=30"
+                        # SSH Options
+                        # We need to STRICTLY disable host key checking for automation
+                        SSH_OPTS="-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=30"
                         
-                        # 1. Install Java if missing (Simple check)
-                        ssh $SSH_OPTS ec2-user@${APP_SERVER_IP} "java -version || sudo dnf install -y java-17-amazon-corretto"
+                        # 1. Install Java if missing
+                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "java -version || sudo dnf install -y java-17-amazon-corretto"
                         
                         # 2. Kill existing process
-                        ssh $SSH_OPTS ec2-user@${APP_SERVER_IP} "pkill -f 'java -jar' || true"
+                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "pkill -f 'java -jar' || true"
                         
                         # 3. Copy JAR file
-                        scp $SSH_OPTS target/${JAR_NAME} ec2-user@${APP_SERVER_IP}:/home/ec2-user/app.jar
+                        scp $SSH_OPTS -i $SSH_KEY target/${JAR_NAME} $SSH_USER@${APP_SERVER_IP}:/home/ec2-user/app.jar
                         
                         # 4. Start Application with Env Vars
-                        ssh $SSH_OPTS ec2-user@${APP_SERVER_IP} "
+                        ssh $SSH_OPTS -i $SSH_KEY $SSH_USER@${APP_SERVER_IP} "
                             export MONGODB_URI='${MONGODB_URI}'
                             export MONGODB_DATABASE='${MONGODB_DATABASE}'
                             export GOOGLE_CLIENT_ID='${GOOGLE_CLIENT_ID}'
@@ -78,7 +79,9 @@ pipeline {
                             export RAZORPAY_KEY_ID='${RAZORPAY_KEY_ID}'
                             export RAZORPAY_KEY_SECRET='${RAZORPAY_KEY_SECRET}'
                             
+                            # Start in background
                             nohup java -jar /home/ec2-user/app.jar > app.log 2>&1 &
+                            sleep 2
                         "
                     '''
                 }
