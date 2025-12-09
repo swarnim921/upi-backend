@@ -149,13 +149,13 @@ Add these as **Secret text**:
 
 | ID | Secret Value |
 |----|--------------|
-| `mongodb-uri` | `mongodb+srv://HIMA6768:Hima2005.@cluster0.rydrkx3.mongodb.net/` |
+| `mongodb-uri` | `YOUR_MONGODB_URI` |
 | `mongodb-database` | `upi_dashboard` |
-| `google-client-id` | `217671956331-u0tvhh7hqhht4gc85ht2i71a3h4btbsp.apps.googleusercontent.com` |
-| `google-client-secret` | `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` |
+| `google-client-id` | `YOUR_GOOGLE_CLIENT_ID` |
+| `google-client-secret` | `YOUR_GOOGLE_CLIENT_SECRET` |
 | `jwt-secret` | `your-production-secret-here` |
-| `razorpay-key-id` | `rzp_test_Rj6mu4IVH4Ze4L` |
-| `razorpay-key-secret` | `gf7O3DEiCWoAMe67o8ldlhVj` |
+| `razorpay-key-id` | `YOUR_RAZORPAY_KEY_ID` |
+| `razorpay-key-secret` | `YOUR_RAZORPAY_KEY_SECRET` |
 
 ---
 
@@ -231,13 +231,13 @@ Type=simple
 WorkingDirectory=/opt/app
 
 # Environment Variables
-Environment=MONGODB_URI=mongodb+srv://HIMA6768:Hima2005.@cluster0.rydrkx3.mongodb.net/
+Environment=MONGODB_URI=YOUR_MONGODB_URI
 Environment=MONGODB_DATABASE=upi_dashboard
-Environment=GOOGLE_CLIENT_ID=217671956331-u0tvhh7hqhht4gc85ht2i71a3h4btbsp.apps.googleusercontent.com
-Environment=GOOGLE_CLIENT_SECRET=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
+Environment=GOOGLE_CLIENT_ID=YOUR_GOOGLE_CLIENT_ID
+Environment=GOOGLE_CLIENT_SECRET=YOUR_GOOGLE_CLIENT_SECRET
 Environment=JWT_SECRET=your-production-secret-here
-Environment=RAZORPAY_KEY_ID=rzp_test_Rj6mu4IVH4Ze4L
-Environment=RAZORPAY_KEY_SECRET=gf7O3DEiCWoAMe67o8ldlhVj
+Environment=RAZORPAY_KEY_ID=YOUR_RAZORPAY_KEY_ID
+Environment=RAZORPAY_KEY_SECRET=YOUR_RAZORPAY_KEY_SECRET
 
 ExecStart=/usr/bin/java -jar /opt/app/upi-backend-0.0.1-SNAPSHOT.jar
 Restart=always
