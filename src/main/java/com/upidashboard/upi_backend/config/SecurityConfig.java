@@ -94,7 +94,11 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
                 configuration.setAllowedOrigins(Arrays.asList(
                                 frontendUrl,
-                                "http://localhost:8080"));
+                                "http://localhost:8080",
+                                "http://localhost:5173",
+                                "http://16.112.4.208", // Frontend IP
+                                "http://16.171.241.145" // Google OAuth Redirect IP
+                ));
                 configuration.setAllowedMethods(Arrays.asList(
                                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
                 configuration.setAllowedHeaders(Arrays.asList(

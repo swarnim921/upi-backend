@@ -17,6 +17,9 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
     private final JwtService jwtService;
 
+    @org.springframework.beans.factory.annotation.Value("${app.frontend.url}")
+    private String frontendUrl;
+
     public OAuth2AuthenticationSuccessHandler(JwtService jwtService) {
         this.jwtService = jwtService;
     }
@@ -33,7 +36,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         String token = jwtService.generateToken(user);
 
         // Redirect to frontend with JWT
-        String redirectUrl = "http://localhost:5173/oauth-success?token=" + token;
+        String redirectUrl = frontendUrl + "/oauth-success?token=" + token;
 
         response.sendRedirect(redirectUrl);
     }
