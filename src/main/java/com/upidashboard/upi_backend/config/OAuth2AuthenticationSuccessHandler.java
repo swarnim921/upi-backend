@@ -33,9 +33,13 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         if (authentication
                 .getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User oAuth2User) {
             String email = oAuth2User.getAttribute("email");
-            // You can also get name, picture, etc.
-            // Generate JWT for this email
-            token = jwtService.generateToken(email);
+            // Create a simple UserDetails object for JWT generation
+            org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(
+                    email,
+                    "", // No password for OAuth2 users
+                    java.util.Collections.emptyList() // No authorities needed for JWT
+            );
+            token = jwtService.generateToken(userDetails);
         } else {
             // Standard login
             org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication
