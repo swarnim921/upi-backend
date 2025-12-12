@@ -39,38 +39,34 @@ public class SecurityConfig {
         private String frontendUrl;
 
         @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(csrf -> csrf.disable())
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                                .sessionManagement(session -> session
-                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers(
-                                                                "/api/auth/**",
-                                                                "/api/health",
-                                                                "/actuator/health",
-                                                                "/error",
-                                                                "/v3/api-docs/**",
-                                                                "/swagger-ui/**",
-                                                                "/swagger-ui.html",
-                                                                "/oauth2/**")
-                                                .permitAll()
-                                                .anyRequest().authenticated())
-                                .oauth2Login(oauth2 -> oauth2
-                                                .redirectionEndpoint(
-                                                                redir -> redir.baseUri("/api/auth/oauth2/callback/*") // accept
-                                                                                                                      // Google
-                                                                                                                      // callback
-                                                )
-                                                .successHandler(oAuth2AuthenticationSuccessHandler)
-                                                .userInfoEndpoint(
-                                                                userInfo -> userInfo.userService(googleOAuth2Service)))
-                                .authenticationProvider(authenticationProvider())
-                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/health",
+                                "/actuator/health",
+                                "/error",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/oauth2/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2
+                        .redirectionEndpoint(redir -> redir.baseUri("/api/auth/oauth2/callback/google"))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .userInfoEndpoint(userInfo -> userInfo.userService(googleOAuth2Service))
+                )
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-                return http.build();
-        }
+        return http.build();
+}
 
         @Bean
         public AuthenticationProvider authenticationProvider() {
