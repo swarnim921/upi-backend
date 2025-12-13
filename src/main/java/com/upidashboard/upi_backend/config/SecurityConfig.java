@@ -39,34 +39,33 @@ public class SecurityConfig {
         private String frontendUrl;
 
         @Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/health",
-                                "/actuator/health",
-                                "/error",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/oauth2/**")
-                        .permitAll()
-                        .anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2
-                        .redirectionEndpoint(redir -> redir.baseUri("/api/auth/oauth2/callback/google"))
-                        .successHandler(oAuth2AuthenticationSuccessHandler)
-                        .userInfoEndpoint(userInfo -> userInfo.userService(googleOAuth2Service))
-                )
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .csrf(csrf -> csrf.disable())
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(
+                                                                "/api/auth/**",
+                                                                "/api/health",
+                                                                "/actuator/health",
+                                                                "/error",
+                                                                "/v3/api-docs/**",
+                                                                "/swagger-ui/**",
+                                                                "/swagger-ui.html",
+                                                                "/oauth2/**")
+                                                .permitAll()
+                                                .anyRequest().authenticated())
+                                .oauth2Login(oauth2 -> oauth2
+                                                .successHandler(oAuth2AuthenticationSuccessHandler)
+                                                .userInfoEndpoint(
+                                                                userInfo -> userInfo.userService(googleOAuth2Service)))
+                                .authenticationProvider(authenticationProvider())
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-}
+                return http.build();
+        }
 
         @Bean
         public AuthenticationProvider authenticationProvider() {
@@ -89,18 +88,27 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
                 CorsConfiguration configuration = new CorsConfiguration();
+
+                // Production: Only allow frontend CloudFront domain
                 configuration.setAllowedOrigins(Arrays.asList(
-                                frontendUrl,
-                                "http://localhost:8080",
-                                "http://localhost:5173",
-                                "http://16.112.4.208", // Frontend IP
-                                "http://16.171.241.145" // Google OAuth Redirect IP
-                ));
+                                frontendUrl, // https://dm3edkla2mshp.cloudfront.net
+                                "https://dm3edkla2mshp.cloudfront.net"));
+
                 configuration.setAllowedMethods(Arrays.asList(
                                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+
                 configuration.setAllowedHeaders(Arrays.asList(
-                                "Authorization", "Content-Type", "X-Requested-With"));
-                configuration.setExposedHeaders(Arrays.asList("Authorization"));
+                                "Authorization",
+                                "Content-Type",
+                                "X-Requested-With",
+                                "Accept",
+                                "Origin"));
+
+                // Expose Set-Cookie header for OAuth cookies
+                configuration.setExposedHeaders(Arrays.asList(
+                                "Authorization",
+                                "Set-Cookie"));
+
                 configuration.setAllowCredentials(true);
                 configuration.setMaxAge(3600L);
 

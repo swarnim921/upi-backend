@@ -3,18 +3,23 @@ package com.upidashboard.upi_backend.config;
 import com.upidashboard.upi_backend.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.http.ResponseCookie;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final JwtService jwtService;
 
-    @org.springframework.beans.factory.annotation.Value("${app.frontend.url}")
+    @Value("${app.frontend.url}")
     private String frontendUrl;
 
     public OAuth2AuthenticationSuccessHandler(JwtService jwtService) {
@@ -29,26 +34,32 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         String token;
 
-        // Check if the user is OAuth2User (Google login)
-        if (authentication
-                .getPrincipal() instanceof org.springframework.security.oauth2.core.user.OAuth2User oAuth2User) {
+        if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
             String email = oAuth2User.getAttribute("email");
-            // Create a simple UserDetails object for JWT generation
-            org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(
+
+            User userDetails = new User(
                     email,
-                    "", // No password for OAuth2 users
-                    java.util.Collections.emptyList() // No authorities needed for JWT
-            );
+                    "",
+                    Collections.emptyList());
+
             token = jwtService.generateToken(userDetails);
         } else {
-            // Standard login
-            org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authentication
-                    .getPrincipal();
+            User user = (User) authentication.getPrincipal();
             token = jwtService.generateToken(user);
         }
 
-        // Redirect to frontend with JWT
-        String redirectUrl = frontendUrl + "/oauth-success?token=" + token;
-        response.sendRedirect(redirectUrl);
+        // 🔐 Create secure cross-site cookie
+        ResponseCookie jwtCookie = ResponseCookie.from("AUTH_TOKEN", token)
+                .httpOnly(true)
+                .secure(true) // REQUIRED for SameSite=None
+                .sameSite("None") // REQUIRED for CloudFront → CloudFront
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60) // 7 days
+                .build();
+
+        response.addHeader("Set-Cookie", jwtCookie.toString());
+
+        // ✅ Redirect WITHOUT token in URL
+        response.sendRedirect(frontendUrl + "/oauth-success");
     }
 }
