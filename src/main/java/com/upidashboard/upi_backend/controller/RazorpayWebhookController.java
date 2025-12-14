@@ -1,10 +1,16 @@
 package com.upidashboard.upi_backend.controller;
 
 import com.upidashboard.upi_backend.config.RazorpayConfig;
+import com.upidashboard.upi_backend.dto.RazorpayOrderRequest;
+import com.upidashboard.upi_backend.dto.RazorpayOrderResponse;
 import com.upidashboard.upi_backend.dto.RazorpayWebhookPayload;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +44,60 @@ public class RazorpayWebhookController {
 
     private final RazorpayConfig razorpayConfig;
     private final ObjectMapper objectMapper;
+
+    /**
+     * Create a Razorpay order.
+     * This endpoint initializes a payment order with Razorpay.
+     */
+    @PostMapping("/create-order")
+    public ResponseEntity<?> createOrder(@RequestBody RazorpayOrderRequest request) {
+        log.info("Creating Razorpay order for amount: {} {}", request.getAmount(), request.getCurrency());
+
+        // Validate Razorpay configuration
+        if (!razorpayConfig.isConfigured()) {
+            log.error("Razorpay is not configured. Missing key-id or key-secret.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Razorpay is not configured"));
+        }
+
+        try {
+            // Initialize Razorpay client
+            RazorpayClient razorpayClient = new RazorpayClient(
+                    razorpayConfig.getKeyId(),
+                    razorpayConfig.getKeySecret());
+
+            // Create order request (amount must be in paise)
+            JSONObject orderRequest = new JSONObject();
+            orderRequest.put("amount", request.getAmount() * 100); // Convert to paise
+            orderRequest.put("currency", request.getCurrency() != null ? request.getCurrency() : "INR");
+            orderRequest.put("receipt", "order_" + System.currentTimeMillis());
+
+            // Create order via Razorpay SDK
+            Order order = razorpayClient.orders.create(orderRequest);
+
+            // Build response
+            RazorpayOrderResponse response = RazorpayOrderResponse.builder()
+                    .orderId(order.get("id"))
+                    .amount(Integer.parseInt(order.get("amount").toString()))
+                    .currency(order.get("currency"))
+                    .receipt(order.get("receipt"))
+                    .status(order.get("status"))
+                    .keyId(razorpayConfig.getKeyId())
+                    .build();
+
+            log.info("Razorpay order created successfully: {}", response.getOrderId());
+            return ResponseEntity.ok(response);
+
+        } catch (RazorpayException e) {
+            log.error("Razorpay API error: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Razorpay API error", "message", e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error creating Razorpay order: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to create order", "message", e.getMessage()));
+        }
+    }
 
     /**
      * Webhook endpoint for Razorpay events.

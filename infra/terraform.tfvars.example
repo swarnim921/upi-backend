@@ -1,0 +1,11 @@
+# Example Terraform Variables
+# Copy this file to terraform.tfvars and update with your values
+
+aws_region  = "ap-south-2"
+vpc_id      = "vpc-xxxxxxxxx"  # Replace with your VPC ID
+subnet_ids  = [
+  "subnet-xxxxxxxxx",  # Replace with subnet in AZ 1
+  "subnet-yyyyyyyyy"   # Replace with subnet in AZ 2
+]
+instance_id = "i-0c7e570df8180f3e5"
+app_port    = 8080
