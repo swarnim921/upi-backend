@@ -17,6 +17,8 @@ pipeline {
         JWT_SECRET = credentials('jwt-secret')
         RAZORPAY_KEY_ID = credentials('razorpay-key-id')
         RAZORPAY_KEY_SECRET = credentials('razorpay-key-secret')
+        FRONTEND_URL = credentials('frontend-url')
+        BACKEND_URL = credentials('backend-url')
     }
     
     stages {
@@ -89,6 +91,8 @@ pipeline {
                             export JWT_SECRET='${JWT_SECRET}'
                             export RAZORPAY_KEY_ID='${RAZORPAY_KEY_ID}'
                             export RAZORPAY_KEY_SECRET='${RAZORPAY_KEY_SECRET}'
+                            export FRONTEND_URL='${FRONTEND_URL}'
+                            export BACKEND_URL='${BACKEND_URL}'
                             
                             # Start in background
                             nohup java -jar /home/ec2-user/app.jar > app.log 2>&1 &
